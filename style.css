@@ -1,144 +1,154 @@
-/* Global reset & box sizing */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* style.css */
+
+
+:root {
+  --nasa-blue: #0b3d91;
+  --nasa-red: #e31b23;
+  --bg-dark: #041230;
+  --card-bg: #072146;
+  --text-light: #cfd8e3;
 }
 
-/* Base page styles */
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f1f1f1;
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(180deg, var(--bg-dark), #020c1f);
+  color: var(--text-light);
+  text-align: center;
+}
+
+
+header {
+  background: linear-gradient(90deg, var(--nasa-blue), #093a7a);
+  border-bottom: 4px solid var(--nasa-red);
   padding: 20px;
 }
 
-/* Centered container */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+
+header h1 {
+  margin: 0;
+  color: white;
 }
 
-/* Header */
-.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
+
+.date-selector {
+  margin-top: 10px;
 }
 
-h1 {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-  color: #212121;
-}
 
-/* Logo */
-.logo {
-  width: 140px;
-  margin-right: 15px;
-}
-
-/* Date‐picker & button row */
-.filters {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 0 20px;
-}
-
-/* Inputs and buttons */
 input[type="date"],
 button {
-  font-family: Arial, sans-serif;
-  font-weight: normal;
-  color: #666;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  line-height: 1.4;
-  width: 100%;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: none;
+  margin: 5px;
 }
 
-/* Button specific */
+
 button {
-  background-color: #d3d3d3;
-  color: black;
+  background-color: var(--nasa-red);
+  color: white;
+  font-weight: bold;
   cursor: pointer;
 }
+
+
 button:hover {
-  background-color: #bfbfbf;
+  background-color: #ff4b5c;
 }
 
-/* Stack horizontally on wider screens */
-@media (min-width: 600px) {
-  .filters {
-    flex-direction: row;
-    padding: 0;
-  }
-  
-  input[type="date"],
-  button {
-    width: auto;
-  }
+
+.loading {
+  font-size: 1.1em;
+  margin-top: 20px;
 }
 
-/* Gallery flex container */
+
 .gallery {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   padding: 20px;
-  justify-content: center;
 }
 
-/* Gallery items */
+
 .gallery-item {
-  flex: 1 1 100%;  /* full width by default */
-  min-width: 280px;
-  max-width: 500px;
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: var(--card-bg);
+  border-radius: 10px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+  cursor: pointer;
 }
 
-/* Three columns on wider screens */
-@media (min-width: 1000px) {
-  .gallery-item {
-    flex: 0 1 31%;
-  }
+
+.gallery-item:hover {
+  transform: scale(1.05);
 }
+
 
 .gallery-item img {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 4px;
 }
+
+
+.gallery-item h3 {
+  margin: 10px 0 5px;
+  color: var(--nasa-red);
+}
+
 
 .gallery-item p {
-  margin-top: 10px;
-  padding: 5px;
-  font-size: 14px;
+  margin-bottom: 10px;
+  color: #ddd;
 }
 
-/* Placeholder content */
-.placeholder {
-  flex: 1 1 100%;
-  text-align: center;
-  padding: 40px;
-  color: #666;
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
 }
 
-.placeholder-icon {
-  font-size: 48px;
-  margin-bottom: 20px;
+
+.modal-content {
+  background: #1a1a1a;
+  border-radius: 10px;
+  max-width: 800px;
+  padding: 20px;
+  position: relative;
+  color: white;
 }
+
+
+.modal-content img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+  color: white;
+}
+
+
+.close:hover {
+  color: var(--nasa-red);
+}
+
+
