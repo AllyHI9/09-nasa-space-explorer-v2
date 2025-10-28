@@ -5,7 +5,7 @@
   --border-radius: 10px;
   --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   --hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  --bg-page: #f5f6fa;
+  --bg-page: #d4dbf5;
   --accent-blue: #0b3d91;
 }
 
@@ -55,14 +55,15 @@ button:hover {
   background-color: #ff4b5c;
 }
 
-/* Gallery Grid */
+
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* Always 3 across */
   gap: 25px;
-  padding: 40px;
   justify-items: center;
+  padding: 40px;
 }
+
 
 /* Card Styling */
 .card {
@@ -105,13 +106,26 @@ button:hover {
   color: var(--text-muted);
 }
 
-/* Loading Text */
 .loading {
+  display: none;
   text-align: center;
-  margin-top: 30px;
-  font-size: 1.1em;
-  color: var(--text-muted);
+  font-size: 1.05rem;
+  color: #d11c1c;
+  font-weight: 800;
+  margin-top: 25px;
+  max-width: 600px;
+  margin-inline: auto;
+  line-height: 1.5;
+  animation: pulse 3.5s ease-in-out infinite;
 }
+
+@keyframes pulse {
+  75% { opacity: 0.2; }
+  100% { opacity: 1; }   /* holds visibility longer */
+  75% { opacity: 1; }   /* stays fully visible for a bit */
+  100% { opacity: 0.2; } /* slow fade-out */
+}
+ 
 
 /* Modal Styling */
 .modal {
@@ -135,9 +149,10 @@ button:hover {
 }
 
 .modal-content img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 15px;
+  width: 50%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  
 }
 
 .modal-info h2 {
@@ -162,3 +177,4 @@ button:hover {
 .close:hover {
   color: #e31b23;
 }
+
