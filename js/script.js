@@ -1,3 +1,4 @@
+// ...existing code...
 // Use this URL to fetch NASA APOD JSON data (static dataset for demo)
 const apodData = 'https://cdn.jsdelivr.net/gh/GCA-Classroom/apod/data.json';
 
@@ -39,6 +40,21 @@ window.addEventListener("DOMContentLoaded", () => {
 // Fetch button
 fetchBtn.addEventListener("click", fetchAPODData);
 
+// Helper: try to build a YouTube thumbnail if the video is a YouTube link
+function youtubeThumbnailFromUrl(url) {
+  try {
+    // common youtube patterns
+    const ytRegex = /(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([A-Za-z0-9_-]{6,})/;
+    const m = url.match(ytRegex);
+    if (m && m[1]) {
+      return `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`;
+    }
+  } catch (e) {
+    // ignore errors and return null
+  }
+  return null;
+}
+
 async function fetchAPODData() {
   // Show random space fact while loading
   const randomFact = spaceFacts[Math.floor(Math.random() * spaceFacts.length)];
@@ -53,14 +69,18 @@ async function fetchAPODData() {
     const allData = await res.json();
     if (!Array.isArray(allData)) throw new Error("Unexpected data format.");
 
-    // Filter and sort most recent images
-    const imagesOnly = allData.filter(item => item.media_type === "image");
-    const sorted = imagesOnly.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Include both images and videos
+    const mediaItems = allData.filter(item =>
+      item.media_type === "image" || item.media_type === "video"
+    );
 
-    // Select 9 most recent images
-    const latestNine = sorted.slice(0, 9);
+    // Sort newest first, take the 9 most recent, then reverse to show oldest -> newest
+    const newestNineDesc = mediaItems
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 9);
+    const displayItems = newestNineDesc.reverse(); // now oldest -> newest
 
-    displayGallery(latestNine);
+    displayGallery(displayItems);
 
   } catch (err) {
     console.error(err);
@@ -73,35 +93,111 @@ async function fetchAPODData() {
   }
 }
 
-// Display images in the gallery
+// Display images and video thumbnails in the gallery (kept to 9 slots)
+// We keep the existing .card markup so the site's look remains the same.
+// For videos we show a thumbnail and a small play badge.
 function displayGallery(images) {
   gallery.innerHTML = "";
+
   images.forEach(item => {
+    // Create card element (keeps current site look)
     const card = document.createElement("div");
     card.className = "card";
+    card.style.position = "relative"; // allow badge overlay for videos
+
+    // Decide thumbnail: image uses item.url, video tries thumbnail_url or YouTube thumb
+    let thumb = "";
+    if (item.media_type === "image") {
+      thumb = item.url;
+    } else {
+      // video
+      thumb = item.thumbnail_url || youtubeThumbnailFromUrl(item.url) || "https://via.placeholder.com/640x360?text=Video";
+    }
+
+    // Insert the card content (same structure as before)
     card.innerHTML = `
-      <img src="${item.url}" alt="${item.title}" />
+      <img src="${thumb}" alt="${item.title}" />
       <div class="card-info">
         <h3>${item.title}</h3>
         <p>${item.date}</p>
       </div>
     `;
+
+    // If it's a video, add a small play badge so users know it's a video
+    if (item.media_type === "video") {
+      const badge = document.createElement("div");
+      badge.textContent = "▶";
+      // simple inline styles to avoid changing CSS files and keep page look
+      badge.style.position = "absolute";
+      badge.style.left = "10px";
+      badge.style.top = "10px";
+      badge.style.background = "rgba(0,0,0,0.6)";
+      badge.style.color = "#fff";
+      badge.style.padding = "6px 8px";
+      badge.style.borderRadius = "6px";
+      badge.style.fontWeight = "700";
+      badge.style.fontSize = "14px";
+      card.appendChild(badge);
+    }
+
+    // Open modal; modal handler will show iframe for videos and image for images
     card.addEventListener("click", () => openModal(item));
     gallery.appendChild(card);
   });
 }
 
-// Modal functions
+// Modal functions: support both images and videos.
+// For videos we inject an iframe with id 'modalIframe' so we can clean it up later.
 function openModal(item) {
-  modalImg.src = item.hdurl || item.url;
+  // Remove any previous iframe
+  const existingIframe = document.getElementById("modalIframe");
+  if (existingIframe) existingIframe.remove();
+
+  // Set title/date/description (same for both media types)
   modalTitle.textContent = item.title;
   modalDate.textContent = item.date;
   modalDesc.textContent = item.explanation;
+
+  if (item.media_type === "image") {
+    // Show the image element and hide any iframe
+    modalImg.style.display = "block";
+    modalImg.src = item.hdurl || item.url;
+  } else {
+    // Video: hide the img element and create an iframe
+    modalImg.style.display = "none";
+    const iframe = document.createElement("iframe");
+    iframe.id = "modalIframe";
+    iframe.src = item.url; // APOD provides embed-friendly URLs in many cases
+    iframe.width = "100%";
+    iframe.height = "480";
+    iframe.frameBorder = "0";
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+
+    // Insert iframe into modal-content before the .modal-info block
+    const modalContent = modal.querySelector(".modal-content");
+    const modalInfo = modal.querySelector(".modal-info");
+    modalContent.insertBefore(iframe, modalInfo);
+  }
+
   modal.style.display = "flex";
 }
 
-closeModal.addEventListener("click", () => (modal.style.display = "none"));
+// Helper to close and cleanup modal (removes iframe and resets image)
+function closeModalCleanup() {
+  modal.style.display = "none";
+  const iframe = document.getElementById("modalIframe");
+  if (iframe) iframe.remove();
+  modalImg.style.display = "block";
+  modalImg.src = "";
+  modalTitle.textContent = "";
+  modalDate.textContent = "";
+  modalDesc.textContent = "";
+}
+
+closeModal.addEventListener("click", () => closeModalCleanup());
 
 window.addEventListener("click", (e) => {
-  if (e.target === modal) modal.style.display = "none";
+  if (e.target === modal) closeModalCleanup();
 });
+// ...existing code...
