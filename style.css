@@ -1,124 +1,128 @@
-/* style.css */
-
-
 :root {
-  --nasa-blue: #0b3d91;
-  --nasa-red: #e31b23;
-  --bg-dark: #041230;
-  --card-bg: #072146;
-  --text-light: #cfd8e3;
+  --card-bg: #ffffff;
+  --text-dark: #1a1a1a;
+  --text-muted: #555;
+  --border-radius: 10px;
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  --bg-page: #f5f6fa;
+  --accent-blue: #0b3d91;
 }
 
-
+/* General Page Styling */
 body {
   margin: 0;
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(180deg, var(--bg-dark), #020c1f);
-  color: var(--text-light);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-dark);
+}
+
+/* Header */
+header {
+  background: var(--accent-blue);
+  color: white;
+  padding: 20px;
   text-align: center;
 }
 
-
-header {
-  background: linear-gradient(90deg, var(--nasa-blue), #093a7a);
-  border-bottom: 4px solid var(--nasa-red);
-  padding: 20px;
-}
-
-
 header h1 {
   margin: 0;
-  color: white;
+  font-weight: 600;
 }
-
 
 .date-selector {
   margin-top: 10px;
 }
 
-
 input[type="date"],
 button {
-  padding: 8px 10px;
-  border-radius: 5px;
+  padding: 8px 12px;
+  border-radius: 6px;
   border: none;
   margin: 5px;
+  font-size: 15px;
 }
-
 
 button {
-  background-color: var(--nasa-red);
+  background-color: #e31b23;
   color: white;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.2s ease;
 }
-
 
 button:hover {
   background-color: #ff4b5c;
 }
 
-
-.loading {
-  font-size: 1.1em;
-  margin-top: 20px;
-}
-
-
+/* Gallery Grid */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 40px;
+  justify-items: center;
 }
 
-
-.gallery-item {
+/* Card Styling */
+.card {
   background: var(--card-bg);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 350px;
   cursor: pointer;
 }
 
-
-.gallery-item:hover {
-  transform: scale(1.05);
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--hover-shadow);
 }
 
-
-.gallery-item img {
+.card img {
   width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
 }
 
-
-.gallery-item h3 {
-  margin: 10px 0 5px;
-  color: var(--nasa-red);
+.card-info {
+  padding: 15px 18px;
 }
 
-
-.gallery-item p {
-  margin-bottom: 10px;
-  color: #ddd;
+.card-info h3 {
+  font-size: 1rem;
+  color: var(--text-dark);
+  margin: 0 0 5px 0;
+  font-weight: 600;
 }
 
+.card-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
 
+/* Loading Text */
+.loading {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 1.1em;
+  color: var(--text-muted);
+}
+
+/* Modal Styling */
 .modal {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
-
 
 .modal-content {
   background: #1a1a1a;
@@ -127,8 +131,8 @@ button:hover {
   padding: 20px;
   position: relative;
   color: white;
+  text-align: left;
 }
-
 
 .modal-content img {
   width: 100%;
@@ -136,6 +140,15 @@ button:hover {
   margin-bottom: 15px;
 }
 
+.modal-info h2 {
+  margin-top: 0;
+  color: #fff;
+}
+
+.modal-info p {
+  color: #ccc;
+  line-height: 1.5;
+}
 
 .close {
   position: absolute;
@@ -146,9 +159,6 @@ button:hover {
   color: white;
 }
 
-
 .close:hover {
-  color: var(--nasa-red);
+  color: #e31b23;
 }
-
-
